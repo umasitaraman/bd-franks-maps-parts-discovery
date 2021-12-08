@@ -11,7 +11,6 @@ public class DevicePartDiscoveryGetMostFrequentWordTest {
 
     private DevicePartDiscovery discovery = new DevicePartDiscovery();
 
-
     @Test
     public void getMostFrequentWord_engineTech_termFrequencyCorrectSize() {
         // GIVEN

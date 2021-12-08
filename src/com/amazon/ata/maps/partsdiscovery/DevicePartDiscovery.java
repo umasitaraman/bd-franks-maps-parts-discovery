@@ -1,8 +1,6 @@
 package com.amazon.ata.maps.partsdiscovery;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Helps expose key words from new editions of part catalogs.
@@ -17,7 +15,23 @@ public class DevicePartDiscovery {
      */
     public Map<String, Integer> calculateWordCounts(PartCatalog catalog) {
         // PARTICIPANTS: Implement calculateWordCounts()
-        return Collections.emptyMap();
+        // instantiate the object to be returned (the returnedMap)
+        Map<String, Integer> returnedMap = new HashMap<>();
+
+        // go through the partCatalog catalogWordList
+        for (String aWord : catalog.getCatalogWords()) {
+            int wordCount = 0;
+            // check to see if the word is already in the returnedMap
+            if (returnedMap.containsKey(aWord)) {    // if it is in the map increment its count by 1
+                wordCount = returnedMap.get(aWord) + 1; // get th current count for the word from the map, increment the current count and
+                returnedMap.put(aWord, wordCount);      // then put the current count for the word back on the returnedMap
+            } else {    // if it's not in the map
+                returnedMap.put(aWord, 1);   //add the current word to the returnedMap with a count of 1
+
+            }
+        }
+
+        return returnedMap;    // return the object expected
     }
 
     // --- Part B ---
@@ -28,6 +42,8 @@ public class DevicePartDiscovery {
      */
     public void removeWord(String word, Map<String, Integer> wordCounts) {
         // PARTICIPANTS: Implement removeWord()
+        // remove the word provided from the map provided
+        wordCounts.remove(word);
         return;
     }
 
@@ -39,7 +55,30 @@ public class DevicePartDiscovery {
      */
     public String getMostFrequentWord(Map<String, Integer> wordCounts) {
         // PARTICIPANTS: Implement getMostFrequentWord()
-        return null;
+        // the word count is the VALUE in an entry in the Map
+        // Tree map will keep the entries in KEY sequence - there is no version of MAP that keeps values sequence
+        // Instantiate the return object
+        String mostFrequentWord = "";
+        int maxCount = 0;
+        //Iterate through the map keeping track of the max value word count
+        for (Map.Entry<String, Integer> anEntry : wordCounts.entrySet()) {
+            if (maxCount < anEntry.getValue()) {
+                maxCount = anEntry.getValue();
+                mostFrequentWord = anEntry.getKey();
+            }
+        }
+        // Alternate technique to solve the same problem
+
+//        Set<String> theKeys = wordCounts.keySet();     //Store all the map keys in a set
+//        for (String aKey : theKeys) {   // iterate through the mapkeys one at a time
+//            if (maxCount < wordCounts.get(aKey)) {
+//                maxCount = wordCounts.get(aKey);
+//                mostFrequentWord = aKey;
+//            }
+//        }
+
+
+        return mostFrequentWord; // return the most frequent word
     }
 
     // --- Part D ---
@@ -53,7 +92,14 @@ public class DevicePartDiscovery {
      */
     public Map<String, Double> getTfIdfScores(Map<String, Integer> wordCounts, Map<String, Double> idfScores) {
         // PARTICIPANTS: Implement getTfIdfScores()
-        return Collections.emptyMap();
+        // Instantiate the return object
+        Map<String, Double> tfIdfScores = new TreeMap<>();
+        // Iterate through the wordCounts Map
+        // calculate the TF-IDF Score for each entry and store it in a new map
+        for (Map.Entry<String, Integer> anEntry : wordCounts.entrySet()) {
+            tfIdfScores.put(anEntry.getKey(), anEntry.getValue() * idfScores.get(anEntry.getKey()));
+        }
+        return tfIdfScores;     // return the map with TF-IDF scores
     }
 
     // --- Extension 1 ---
@@ -64,8 +110,19 @@ public class DevicePartDiscovery {
      * @return a list of the 10 highest scored words for a catalog.
      */
     public List<String> getBestScoredWords(Map<String, Double> tfIdfScores) {
-        // PARTICIPANTS: Implement getBestScoredWords()
-        return Collections.emptyList();
+        // iterate through the scores
+        List<Map.Entry<String, Double>> mapList = new ArrayList<>(tfIdfScores.entrySet());
+        Collections.sort(mapList, new Comparator<Map.Entry<String, Double>>() {
+            @Override
+            public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+        List<String> topTenList = new ArrayList<>();
+        for (int i = 0; i< 10; i++) {
+            topTenList.add(mapList.get(i).getKey());
+        }
+        return topTenList;
     }
 
     // --- Extension 2 ---
@@ -79,7 +136,22 @@ public class DevicePartDiscovery {
      */
     public Map<String, Double> calculateIdfScores(List<Map<String,Integer>> catalogWordCounts) {
         // PARTICIPANTS: Implement getIdfScores()
-        return Collections.emptyMap();
+        // iterate through the list,
+        Map<String, Double> returnMap = new TreeMap<>();
+        for (Map<String, Integer> listEntry : catalogWordCounts) {
+            for (String word : listEntry.keySet()) {
+                if(returnMap.containsKey(word)) {
+                    returnMap.put(word, listEntry.get(word) + returnMap.get(word));
+                } else {
+                    returnMap.put(word, Double.valueOf(listEntry.get(word)));
+                }
+            }
+        }
+        for (Map.Entry<String, Double> eachValue : returnMap.entrySet()) {
+            returnMap.put(eachValue.getKey(), 1.0 / eachValue.getValue());
+            // returnedMap.replaceAll
+        }
+        return returnMap;
     }
 
 }
