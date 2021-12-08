@@ -1,6 +1,8 @@
 package com.amazon.ata.maps.partsdiscovery;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Helps expose key words from new editions of part catalogs.
@@ -15,17 +17,7 @@ public class DevicePartDiscovery {
      */
     public Map<String, Integer> calculateWordCounts(PartCatalog catalog) {
         // PARTICIPANTS: Implement calculateWordCounts()
-        Map<String, Integer> wordCounts = new HashMap<>();
-        for ( String aWord : catalog.getCatalogWords()) {
-            if (wordCounts.containsKey(aWord)) {
-                int currentCount = wordCounts.get(aWord) + 1;
-                wordCounts.put(aWord,currentCount);
-            }
-            else {
-                wordCounts.put(aWord,1);
-            }
-        }
-        return wordCounts;
+        return Collections.emptyMap();
     }
 
     // --- Part B ---
@@ -36,7 +28,6 @@ public class DevicePartDiscovery {
      */
     public void removeWord(String word, Map<String, Integer> wordCounts) {
         // PARTICIPANTS: Implement removeWord()
-        wordCounts.remove(word);
         return;
     }
 
@@ -48,10 +39,7 @@ public class DevicePartDiscovery {
      */
     public String getMostFrequentWord(Map<String, Integer> wordCounts) {
         // PARTICIPANTS: Implement getMostFrequentWord()
-
-        Map<String, Integer> sortedMapByValue = sortByValue(wordCounts);
-        Map.Entry<String,Integer> entry = sortedMapByValue.entrySet().iterator().next();
-        return entry.getKey();
+        return null;
     }
 
     // --- Part D ---
@@ -65,12 +53,7 @@ public class DevicePartDiscovery {
      */
     public Map<String, Double> getTfIdfScores(Map<String, Integer> wordCounts, Map<String, Double> idfScores) {
         // PARTICIPANTS: Implement getTfIdfScores()
-        Map<String, Double> TfIdScores = new TreeMap<String, Double>();
-        Set<String> theKeys = wordCounts.keySet();
-        for (String aKey : theKeys) {
-            TfIdScores.put(aKey, wordCounts.get(aKey) * idfScores.get(aKey));
-        }
-        return TfIdScores;
+        return Collections.emptyMap();
     }
 
     // --- Extension 1 ---
@@ -98,30 +81,5 @@ public class DevicePartDiscovery {
         // PARTICIPANTS: Implement getIdfScores()
         return Collections.emptyMap();
     }
-    /**
-     * Sort hashmap by descending values
-     *
-     * @param aHashMap
-     * @return result - the given HashMap sorted by descending values
-     */
-    public static Map<String, Integer> sortByValue(Map<String, Integer> aHashMap) {
 
-        // Create a list from elements of HashMap
-        List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(aHashMap.entrySet());
-
-        // Sort the list by descending values using Collections class sort method
-        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-            public int compare(Map.Entry<String, Integer> entry1, Map.Entry<String, Integer> entry2) {
-                return (entry2.getValue()).compareTo(entry1.getValue());
-            }
-        });
-
-        // Add the sorted elements in the list to a LinkedHashMap (Map entries stored in entry sequence)
-        HashMap<String, Integer> result = new LinkedHashMap<String, Integer>();  // Hold return object
-        for (Map.Entry<String, Integer> anEntry : list) {                        // Loop through sorted list
-            result.put(anEntry.getKey(), anEntry.getValue());                    // Add current entry from list to result Map
-        }
-        // return the LinkedHashMap with entries in sorted sequence
-        return result;
-    }
 }
